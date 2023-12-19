@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loginSuccess, setLoginSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleLogin = async () => {
@@ -25,11 +24,11 @@ const LoginScreen = () => {
       });
 
       if (response.status === 200) {
-        setLoginSuccess(true);
         setErrorMessage(null);
         Alert.alert('Login Successful!');
+        // Navigate to HomeScreen upon successful login
+        navigation.navigate('HomeScreen');
       } else {
-        setLoginSuccess(false);
         setErrorMessage('Unexpected response from server');
         Alert.alert('Login Failed', 'Unexpected response from server');
       }
@@ -43,7 +42,6 @@ const LoginScreen = () => {
         setErrorMessage('An error occurred during login');
       }
 
-      setLoginSuccess(false);
       Alert.alert('Login Failed', errorMessage);
     }
   };
@@ -70,7 +68,6 @@ const LoginScreen = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

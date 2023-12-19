@@ -1,8 +1,24 @@
-import React from 'react';
-import LoginScreen from './components/LoginScreen'; // Adjust the path based on your project structure
+// Import necessary modules from React Navigation
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-const App = () => {
-  return <LoginScreen />;
+// Import your screens
+import LoginScreen from './components/LoginScreen';
+import HomeScreen from './components/HomeScreen'; // Make sure you have this component
+
+// Create a Stack Navigator
+const Stack = createStackNavigator();
+
+// Define your navigation stack
+const AppNavigator = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 };
 
-export default App;
+export default AppNavigator;
