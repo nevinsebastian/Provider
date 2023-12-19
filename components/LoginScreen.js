@@ -1,35 +1,72 @@
-// LoginScreen.js
-
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import axios from 'axios';
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log('Login button pressed');
+  const handleLogin = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('grant_type', '');
+      formData.append('username', username);
+      formData.append('password', password);
+      formData.append('scope', '');
+      formData.append('client_id', '');
+      formData.append('client_secret', '');
+
+      const response = await axios.post('http://13.55.58.126:8000/loginprovider', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if (response.status === 200) {
+        setLoginSuccess(true);
+        setErrorMessage(null);
+        Alert.alert('Login Successful!');
+      } else {
+        setLoginSuccess(false);
+        setErrorMessage('Unexpected response from server');
+        Alert.alert('Login Failed', 'Unexpected response from server');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 422) {
+        // Handle validation errors
+        setErrorMessage('Invalid username or password');
+      } else {
+        // Handle other errors
+        console.error('Error during login:', error.message);
+        setErrorMessage('An error occurred during login');
+      }
+
+      setLoginSuccess(false);
+      Alert.alert('Login Failed', errorMessage);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text>Login Screen</Text>
+      <Text style={styles.header}>Login</Text>
+
       <TextInput
+        style={styles.input}
         placeholder="Username"
-        value={username}
         onChangeText={(text) => setUsername(text)}
-        style={styles.input}
       />
       <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        secureTextEntry
         style={styles.input}
+        placeholder="Password"
+        secureTextEntry={true}
+        onChangeText={(text) => setPassword(text)}
       />
+
       <Button title="Login" onPress={handleLogin} />
-      <Text onPress={() => navigation.navigate('Register')}>Don't have an account? Register here</Text>
+
+      {errorMessage && <Text style={styles.errorMessage}>{errorMessage}</Text>}
     </View>
   );
 };
@@ -39,14 +76,24 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 16,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
   },
   input: {
+    width: '100%',
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    width: 200,
-    margin: 10,
-    padding: 5,
+    marginBottom: 16,
+    padding: 8,
+  },
+  errorMessage: {
+    color: 'red',
+    marginTop: 16,
   },
 });
 
