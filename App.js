@@ -4,7 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // Import your screens
 import LoginScreen from './components/LoginScreen';
-import HomeScreen from './components/HomeScreen'; // Make sure you have this component
+import HomeScreen from './components/HomeScreen';
+import AddActivityScreen from './components/AddActivityScreen';
 
 // Create a Stack Navigator
 const Stack = createStackNavigator();
@@ -14,8 +15,9 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        {/* Add LoginScreen or any other screens if needed */}
         <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="AddActivityScreen" component={AddActivityScreen} options={{ title: 'Add Activity' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
